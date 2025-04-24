@@ -28,11 +28,11 @@ export class AuthController {
   @UseGuards(AuthGuard('google')) // Handles Google callback
   async googleAuthRedirect(@Req() req, @Res() res) {
   if (!req.user) {
-    return res.redirect('http://localhost:5173/login?error=unauthorized');
+    return res.redirect('https://college-management-system-frotend.vercel.app/login?error=unauthorized');
   }
 
   const response = await this.authService.googleLogin(req);
-  return res.redirect(`http://localhost:5173?token=${response.access_token}&name=${encodeURIComponent(response.user.name)}&email=${encodeURIComponent(response.user.email)}`);
+  return res.redirect(`https://college-management-system-frotend.vercel.app?token=${response.access_token}&name=${encodeURIComponent(response.user.name)}&email=${encodeURIComponent(response.user.email)}`);
   }
 
   @Put('change-role/:id')
