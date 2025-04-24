@@ -1,0 +1,295 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+// Models
+
+model User {
+    id              String            @id @default(auto()) @map("_id") @db.ObjectId
+    email           String            @unique
+    password        String
+    name            String
+    role            Role?
+    active          Boolean           @default(true)
+    createdAt       DateTime          @default(now())
+    Student         Student?
+    ClassAssignment ClassAssignment[]
+}
+
+enum Role {
+    PRINCIPAL
+    ACCOUNTANT
+    ADMISSION_OFFICER
+    EXAMINATION_OFFICER
+    TEACHER
+    PLACEMENT_OFFICER
+    PMS_OFFICER
+    EXTRACURRICULAR_HEAD
+    STUDENT
+}
+
+// Student Information linked with admissiontype, category, batch, fees, results, documents, and scholarship
+
+model Student {
+    id              String         @id @default(auto()) @map("_id") @db.ObjectId
+    profileImage    String?
+    userId          String         @unique @db.ObjectId
+    user            User           @relation(fields: [userId], references: [id])
+    rollNumber      String?        @unique
+    branchName      String?
+    admissionNumber String?        @unique
+    name            String
+    email           String
+    contact         String?
+    address         String?
+    city           String?
+    dob     String?
+    state           String?
+    parentName      String?
+    parentContact   String?
+    batchId         String?        @db.ObjectId
+    batch           Batch?         @relation(fields: [batchId], references: [id])
+    admissionType   AdmissionType?
+    category        Category?
+    document        Document[]
+    fees            Fee[]
+    results         ExamResult[]
+    scholarshipId   String?        @db.ObjectId
+    scholarship     Scholarship?   @relation(fields: [scholarshipId], references: [id])
+    feeStuctureId   String?        @db.ObjectId
+    feeStrucutre    FeeStructure?  @relation(fields: [feeStuctureId], references: [id])
+    createdAt       DateTime       @default(now())
+}
+
+enum AdmissionType {
+    FIRST_YEAR
+    LEET
+}
+
+enum Category {
+    GENERAL
+    OBC
+    ST
+    SC
+}
+
+// Batch Management (Simplified)
+model Batch {
+    id               String            @id @default(auto()) @map("_id") @db.ObjectId
+    name             String            @unique // e.g., "2023-26"
+    isActive         Boolean           @default(true)
+    students         Student[]
+    classAssignments ClassAssignment[]
+    createdAt        DateTime          @default(now())
+}
+
+// Document Management (Simplified)
+model Document {
+    id        String       @id @default(auto()) @map("_id") @db.ObjectId
+    studentId String       @db.ObjectId
+    type      DocumentType
+    fileName  String
+    fileUrl   String
+    createdAt DateTime     @default(now())
+    Student   Student      @relation(fields: [studentId], references: [id])
+}
+
+enum DocumentType {
+    MARKSHEET_10TH
+    MARKSHEET_12TH
+    CASTE_CERTIFICATE
+    PHOTO
+    OTHER
+}
+
+// Fee Structure Model that captures the exact fee patterns in your spreadsheet
+model FeeStructure {
+    id                String          @id @default(auto()) @map("_id") @db.ObjectId
+    admissionType     AdmissionType // FIRST_YEAR or LEET
+    scholarshipScheme ScholarshipType
+    semesterNumber    Int // 1-6
+    df                Float // Development Fee
+    sf                Float // Student Fee
+    security          Float // Security Deposit
+    tf                Float // Tuition Fee
+    total             String // Total Fee
+    isActive          Boolean         @default(true)
+    createdAt         DateTime        @default(now())
+    fees              Fee[]
+    students          Student[]
+
+    // Unique constraint to prevent duplicates
+    @@unique([admissionType, scholarshipScheme, semesterNumber])
+}
+
+// Fee Management (Simplified)
+
+model Fee {
+    id             String        @id @default(auto()) @map("_id") @db.ObjectId
+    studentId      String        @db.ObjectId
+    semesterId     String        @db.ObjectId
+    feeStructureId String?       @db.ObjectId
+    amountDue      Float
+    amountPaid     Float         @default(0)
+    dueDate        DateTime
+    status         FeeStatus
+    createdAt      DateTime      @default(now())
+    Student        Student       @relation(fields: [studentId], references: [id])
+    Semester       Semester      @relation(fields: [semesterId], references: [id])
+    FeeStructure   FeeStructure? @relation(fields: [feeStructureId], references: [id])
+}
+
+enum FeeStatus {
+    PAID
+    PARTIAL
+    PENDING
+    WAIVED
+}
+
+// Authentication (Token Management)
+
+model BlacklistedToken {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    token     String   @unique
+    expiresAt DateTime
+    createdAt DateTime @default(now())
+}
+
+// Scholarship (Simplified)
+model Scholarship {
+    id        String             @id @default(auto()) @map("_id") @db.ObjectId
+    type      ScholarshipType
+    amount    Float
+    status    ScholarshipStatus?
+    createdAt DateTime           @default(now())
+    students  Student[] // 1 scholarship has many students
+}
+
+enum ScholarshipType {
+    CMS50
+    CMS60
+    CMS70
+    CMS80
+    CMS90
+    PMS
+    FWS
+}
+
+enum ScholarshipStatus {
+    APPROVED
+    REJECTED
+    DISBURSED
+}
+
+// Examination Management (Simplified)
+
+model Semester {
+    id       String       @id @default(auto()) @map("_id") @db.ObjectId
+    //name     String // e.g., "Semester 1"
+    number   Int // e.g., 1, 2, 3, etc.
+    results  ExamResult[]
+    isActive Boolean      @default(true)
+    fees     Fee[]
+}
+
+model Subject {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  syllabusYear Int
+  semesterNumber String?
+  branchName   String
+  subjectName  String
+  subjectCode  String
+  maxMarks     Float
+  subjectType  String
+  createdAt    DateTime  @default(now())
+    // ← add back‐relation so you can do subject.examResults
+  examResults  ExamResult[]
+}
+
+
+model ExamResult {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    studentId   String   @db.ObjectId
+    semesterId  String   @db.ObjectId
+     subjectId   String    @db.ObjectId         
+    marks       Float
+    maxMarks    Float    @default(100)
+    createdAt   DateTime @default(now())
+    Student     Student  @relation(fields: [studentId], references: [id])
+    Semester    Semester @relation(fields: [semesterId], references: [id])
+     Subject     Subject   @relation(fields: [subjectId], references: [id])
+}
+
+// Placement Management (Simplified)
+
+model Placement {
+    id          String          @id @default(auto()) @map("_id") @db.ObjectId
+    studentId   String          @db.ObjectId
+    companyName String
+    jobRole     String
+    salary      Float?
+    offerDate   DateTime
+    status      PlacementStatus @default(OFFERED)
+    createdAt   DateTime        @default(now())
+}
+
+enum PlacementStatus {
+    OFFERED
+    ACCEPTED
+    REJECTED
+    JOINED
+}
+
+// Events Management (Simplified)
+
+model Event {
+    id          String   @id @default(auto()) @map("_id") @db.ObjectId
+    title       String
+    description String
+    eventType   String
+    startDate   DateTime
+    venue       String
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+}
+
+model EventRegistration {
+    id             String    @id @default(auto()) @map("_id") @db.ObjectId
+    eventId        String    @db.ObjectId
+    studentId      String    @db.ObjectId
+    attended       Boolean?
+    attendanceDate DateTime?
+    notes          String?
+    createdAt      DateTime  @default(now())
+}
+
+// Teacher Assignment (Simplified)
+
+model ClassAssignment {
+    id           String  @id @default(auto()) @map("_id") @db.ObjectId
+    teacherId    String  @db.ObjectId
+    batchId      String  @db.ObjectId
+    section      String?
+    academicYear String?
+    isActive     Boolean @default(true)
+    Batch        Batch   @relation(fields: [batchId], references: [id])
+    teacher      User    @relation(fields: [teacherId], references: [id])
+}
+
+// Audit Log (Basic)
+
+model AuditLog {
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    entityType String
+    action     String
+    userId     String   @db.ObjectId
+    timestamp  DateTime @default(now())
+}
