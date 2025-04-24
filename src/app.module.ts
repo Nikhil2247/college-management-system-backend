@@ -18,6 +18,8 @@ import { ConfigModule } from '@nestjs/config';
 import { CorsMiddleware } from 'corsmiddleware.middleware';
 import { FeeStructureModule } from './fee-structure/fee-structure.module';
 import { SubjectModule } from './subject/subject.module';
+import { CalendarModule } from './calendar/calendar.module';
+import { NoticeModule } from './notice/notice.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { SubjectModule } from './subject/subject.module';
     ConfigModule.forRoot({ isGlobal: true }),
     FeeStructureModule,
     SubjectModule,
+    CalendarModule,
+    NoticeModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UserService],
