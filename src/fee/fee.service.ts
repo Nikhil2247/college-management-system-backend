@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'prisma/prisma.service';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Injectable()
 export class FeeService {
@@ -17,6 +18,7 @@ export class FeeService {
     return this.prisma.fee.create({ data });
   }
 
+  //@Roles('"TEACHER", "ADMISSION_OFFICER"')
   async getAllFees() {
     return this.prisma.fee.findMany({
       include: {

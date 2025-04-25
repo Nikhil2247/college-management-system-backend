@@ -27,6 +27,7 @@ export class StudentController {
     return this.studentService.updateStudent(userId, body);
   }
 
+  //@Roles('"ADMIN", "TEACHER", "ADMISSION_OFFICER", "STUDENT"')
   @Put('update-student/:id')
   @Roles('ADMISSION_OFFICER')
   async updateStudentByAdmin(
@@ -36,18 +37,27 @@ export class StudentController {
     return this.studentService.updateStudentByAdmin(studentId, body);
   }
 
+  //@Roles('"PRINCIPAL", "TEACHER", "ADMISSION_OFFICER"')
   @Get()
   findAll() {
     return this.studentService.findAllStudents();
   }
 
- @Post('create')
-
+  @Post('create')
   @UseInterceptors(FileInterceptor('profileImage'))
   async create(
     @Body() data: any,
     @UploadedFile() profileImage?: Express.Multer.File,
   ) {
     return this.studentService.createStudent(data, profileImage);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const student = await this.studentService.getStudentById(id);
+    if (!student) {
+      throw new BadRequestException('Student not found');
+    }
+    return student;
   }
 }

@@ -55,7 +55,19 @@ export class StudentService {
         name: body.name,
         email: body.email,
         contact: body.contact,
+        dob: body.dob,
+        address: body.address,
+        city: body.city,
+        state: body.state,
+        branchName: body.branchName,
+        pinCode: body.pinCode,
+        tehsil: body.tehsil,
+        district: body.district,
+        gender: body.gender,
+        tenthper: body.tenthper,
+        twelthper: body.twelthper,
         parentName: body.parentName,
+        motherName: body.motherName,
         parentContact: body.parentContact,
         rollNumber: body.rollNumber,
         admissionNumber: body.admissionNumber,
@@ -130,6 +142,13 @@ export class StudentService {
         dob: data.dob,
         branchName: data.branchName,
         parentName: data.parentName,
+        motherName: data.motherName,
+        pinCode: data.pinCode,
+        tehsil: data.tehsil,
+        district: data.district,
+        gender: data.gender,
+        tenthper: data.tenthper,
+        twelthper: data.twelthper,
         parentContact: data.parentContact,
         rollNumber: data.rollNumber,
         admissionNumber: data.admissionNumber,
@@ -175,5 +194,30 @@ export class StudentService {
     };
 
     await transporter.sendMail(mailOptions);
+  }
+
+  async getStudentById(id: string) {
+    const student = await this.prisma.student.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        batch: true,
+        scholarship: true,
+        document: true,
+        fees: true,
+        results: {
+          include: {
+            Subject: true,
+          },
+        },
+        feeStrucutre: true,
+      },
+    });
+
+    if (!student) {
+      throw new NotFoundException('Student not found');
+    }
+
+    return student;
   }
 }

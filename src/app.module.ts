@@ -20,6 +20,8 @@ import { FeeStructureModule } from './fee-structure/fee-structure.module';
 import { SubjectModule } from './subject/subject.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { NoticeModule } from './notice/notice.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -41,7 +43,14 @@ import { NoticeModule } from './notice/notice.module';
     NoticeModule,
   ],
   controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  providers: [
+    AppService,
+    UserService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

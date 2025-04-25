@@ -39,34 +39,41 @@ enum Role {
 // Student Information linked with admissiontype, category, batch, fees, results, documents, and scholarship
 
 model Student {
-    id              String         @id @default(auto()) @map("_id") @db.ObjectId
+    id              String  @id @default(auto()) @map("_id") @db.ObjectId
     profileImage    String?
-    userId          String         @unique @db.ObjectId
-    user            User           @relation(fields: [userId], references: [id])
-    rollNumber      String?        @unique
+    userId          String  @unique @db.ObjectId
+    user            User    @relation(fields: [userId], references: [id])
+    rollNumber      String? @unique
     branchName      String?
-    admissionNumber String?        @unique
+    admissionNumber String? @unique
     name            String
     email           String
     contact         String?
     address         String?
-    city           String?
-    dob     String?
+    pinCode         String?
+    tehsil          String?
+    district        String?
+    city            String?
+    dob             String?
     state           String?
     parentName      String?
     parentContact   String?
-    batchId         String?        @db.ObjectId
-    batch           Batch?         @relation(fields: [batchId], references: [id])
-    admissionType   AdmissionType?
-    category        Category?
-    document        Document[]
-    fees            Fee[]
-    results         ExamResult[]
-    scholarshipId   String?        @db.ObjectId
-    scholarship     Scholarship?   @relation(fields: [scholarshipId], references: [id])
-    feeStuctureId   String?        @db.ObjectId
-    feeStrucutre    FeeStructure?  @relation(fields: [feeStuctureId], references: [id])
-    createdAt       DateTime       @default(now())
+    motherName      String?
+    gender          String?
+    tenthper        Float?
+    twelthper       Float?
+    batchId       String?        @db.ObjectId
+    batch         Batch?         @relation(fields: [batchId], references: [id])
+    admissionType AdmissionType?
+    category      Category?
+    document      Document[]
+    fees          Fee[]
+    results       ExamResult[]
+    scholarshipId String?        @db.ObjectId
+    scholarship   Scholarship?   @relation(fields: [scholarshipId], references: [id])
+    feeStuctureId String?        @db.ObjectId
+    feeStrucutre  FeeStructure?  @relation(fields: [feeStuctureId], references: [id])
+    createdAt     DateTime       @default(now())
 }
 
 enum AdmissionType {
@@ -201,31 +208,30 @@ model Semester {
 }
 
 model Subject {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  syllabusYear Int
-  semesterNumber String?
-  branchName   String
-  subjectName  String
-  subjectCode  String
-  maxMarks     Float
-  subjectType  String
-  createdAt    DateTime  @default(now())
+    id             String       @id @default(auto()) @map("_id") @db.ObjectId
+    syllabusYear   Int
+    semesterNumber String?
+    branchName     String
+    subjectName    String
+    subjectCode    String
+    maxMarks       Float
+    subjectType    String
+    createdAt      DateTime     @default(now())
     // ← add back‐relation so you can do subject.examResults
-  examResults  ExamResult[]
+    examResults    ExamResult[]
 }
 
-
 model ExamResult {
-    id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    studentId   String   @db.ObjectId
-    semesterId  String   @db.ObjectId
-     subjectId   String    @db.ObjectId         
-    marks       Float
-    maxMarks    Float    @default(100)
-    createdAt   DateTime @default(now())
-    Student     Student  @relation(fields: [studentId], references: [id])
-    Semester    Semester @relation(fields: [semesterId], references: [id])
-     Subject     Subject   @relation(fields: [subjectId], references: [id])
+    id         String   @id @default(auto()) @map("_id") @db.ObjectId
+    studentId  String   @db.ObjectId
+    semesterId String   @db.ObjectId
+    subjectId  String   @db.ObjectId
+    marks      Float
+    maxMarks   Float    @default(100)
+    createdAt  DateTime @default(now())
+    Student    Student  @relation(fields: [studentId], references: [id])
+    Semester   Semester @relation(fields: [semesterId], references: [id])
+    Subject    Subject  @relation(fields: [subjectId], references: [id])
 }
 
 // Placement Management (Simplified)
@@ -295,18 +301,18 @@ model AuditLog {
 }
 
 model Calendar {
-    id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    title       String
-    startDate   DateTime?
-    endDate     DateTime?
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id        String    @id @default(auto()) @map("_id") @db.ObjectId
+    title     String
+    startDate DateTime?
+    endDate   DateTime?
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
 }
 
 model Notice {
-    id          String   @id @default(auto()) @map("_id") @db.ObjectId
-    title       String
-    message     String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    title     String
+    message   String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
