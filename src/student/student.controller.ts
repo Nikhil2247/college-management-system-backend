@@ -22,14 +22,14 @@ export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 
   @Put('update/self/:id')
-  //@Roles('STUDENT')
+  @Roles('STUDENT')
   updateSelf(@Param('id') userId: string, @Body() body: any) {
     return this.studentService.updateStudent(userId, body);
   }
 
   //@Roles('"ADMIN", "TEACHER", "ADMISSION_OFFICER", "STUDENT"')
   @Put('update-student/:id')
-  @Roles('ADMISSION_OFFICER')
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   async updateStudentByAdmin(
     @Param('id') studentId: string,
     @Body() body: any,
@@ -37,13 +37,14 @@ export class StudentController {
     return this.studentService.updateStudentByAdmin(studentId, body);
   }
 
-  //@Roles('"PRINCIPAL", "TEACHER", "ADMISSION_OFFICER"')
   @Get()
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   findAll() {
     return this.studentService.findAllStudents();
   }
 
   @Post('create')
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   @UseInterceptors(FileInterceptor('profileImage'))
   async create(
     @Body() data: any,
@@ -53,6 +54,7 @@ export class StudentController {
   }
 
   @Get(':id')
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   async findOne(@Param('id') id: string) {
     const student = await this.studentService.getStudentById(id);
     if (!student) {

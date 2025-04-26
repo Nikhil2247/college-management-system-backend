@@ -53,7 +53,7 @@ export class AuthService {
 
     const user = await this.prisma.user.findUnique({ where: { email } });
 
-    if (!user || user.role !== 'STUDENT') {
+    if (!user ) {
       throw new ForbiddenException('Invalid email or role');
     }
 
