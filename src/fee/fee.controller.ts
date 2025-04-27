@@ -19,7 +19,7 @@ export class FeeController {
   }
 
   @Get(':id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL')
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL','ACCOUNTANT')
   getOne(@Param('id') id: string) {
     return this.feeService.getFeeById(id);
   }
