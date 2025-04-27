@@ -38,7 +38,7 @@ export class AuthController {
 
     const response = await this.authService.googleLogin(req);
     return res.redirect(
-      `https://college-management-system-frotend.vercel.app?token=${response.access_token}&id=${encodeURIComponent(response.user.id)}&name=${encodeURIComponent(response.user.name)}&email=${encodeURIComponent(response.user.email)}`,
+      `https://college-management-system-frotend.vercel.app/google-redirect?token=${response.access_token}&id=${encodeURIComponent(response.user.id)}&name=${encodeURIComponent(response.user.name)}&email=${encodeURIComponent(response.user.email)}`,
     );
   }
 
