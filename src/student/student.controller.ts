@@ -54,9 +54,19 @@ export class StudentController {
   }
 
   @Get(':id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER','STUDENT')
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER', 'STUDENT')
   async findOne(@Param('id') id: string) {
     const student = await this.studentService.getStudentById(id);
+    if (!student) {
+      throw new BadRequestException('Student not found');
+    }
+    return student;
+  }
+
+  @Get('profile/:id')
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER', 'STUDENT')
+  async findOneByUserId(@Param('id') id: string) {
+    const student = await this.studentService.getStudentByUserId(id);
     if (!student) {
       throw new BadRequestException('Student not found');
     }

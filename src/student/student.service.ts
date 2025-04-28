@@ -220,4 +220,29 @@ export class StudentService {
 
     return student;
   }
+
+    async getStudentByUserId(id: string) {
+    const student = await this.prisma.student.findUnique({
+      where: { userId: id },
+      include: {
+        user: true,
+        batch: true,
+        scholarship: true,
+        document: true,
+        fees: true,
+        results: {
+          include: {
+            Subject: true,
+          },
+        },
+        feeStrucutre: true,
+      },
+    });
+
+    if (!student) {
+      throw new NotFoundException('Student not found');
+    }
+
+    return student;
+  }
 }
