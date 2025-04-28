@@ -21,25 +21,25 @@ export class SubjectController {
   constructor(private readonly service: SubjectService) {}
 
   @Post()
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL')
   create(@Body() data: any) {
     return this.service.create(data);
   }
 
   @Get()
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL','TEACHER')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL','TEACHER')
   findAll() {
     return this.service.findAll();
   }
 
   @Get(':id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
   }
 
   @Put(':id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   update(@Param('id') id: string, @Body() data: any) {
     return this.service.update(id, data);
   }
