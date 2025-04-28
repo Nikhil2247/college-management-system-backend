@@ -54,7 +54,7 @@ export class StudentController {
   }
 
   @Get(':id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
+  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER','STUDENT')
   async findOne(@Param('id') id: string) {
     const student = await this.studentService.getStudentById(id);
     if (!student) {
