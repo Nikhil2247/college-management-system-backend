@@ -29,7 +29,7 @@ export class StudentController {
 
   //@Roles('"ADMIN", "TEACHER", "ADMISSION_OFFICER", "STUDENT"')
   @Put('update-student/:id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   async updateStudentByAdmin(
     @Param('id') studentId: string,
     @Body() body: any,
