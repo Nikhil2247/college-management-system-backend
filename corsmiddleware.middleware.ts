@@ -7,7 +7,7 @@ export class CorsMiddleware implements NestMiddleware {
       'https://omnicassion.netlify.app',
       'https://omnicassion.vercel.app',
       'http://localhost:5173',
-      'https://college-management-system-frotend.vercel.app',
+      'https://cms-polytechnic.vercel.app',
     ];
 
     const origin = req.headers.origin;
