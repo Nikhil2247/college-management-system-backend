@@ -32,13 +32,13 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res) {
     if (!req.user) {
       return res.redirect(
-        'https://college-management-system-frotend.vercel.app/login?error=unauthorized',
+        'https://cms-polytechnic.vercel.app/login?error=unauthorized',
       );
     }
 
     const response = await this.authService.googleLogin(req);
     return res.redirect(
-      `https://college-management-system-frotend.vercel.app/google-redirect?token=${response.access_token}&id=${encodeURIComponent(response.user.id)}&name=${encodeURIComponent(response.user.name)}&email=${encodeURIComponent(response.user.email)}`,
+      `https://cms-polytechnic.vercel.app/google-redirect?token=${response.access_token}&id=${encodeURIComponent(response.user.id)}&name=${encodeURIComponent(response.user.name)}&email=${encodeURIComponent(response.user.email)}`,
     );
   }
 
