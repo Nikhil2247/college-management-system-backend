@@ -38,13 +38,13 @@ export class StudentController {
   }
 
   @Get()
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   findAll() {
     return this.studentService.findAllStudents();
   }
 
   @Post('create')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER')
   @UseInterceptors(FileInterceptor('profileImage'))
   async create(
     @Body() data: any,
@@ -54,7 +54,7 @@ export class StudentController {
   }
 
   @Get(':id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER', 'STUDENT')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER', 'STUDENT')
   async findOne(@Param('id') id: string) {
     const student = await this.studentService.getStudentById(id);
     if (!student) {
@@ -64,7 +64,7 @@ export class StudentController {
   }
 
   @Get('profile/:id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER', 'STUDENT')
+  //@Roles('ADMISSION_OFFICER', 'PRINCIPAL', 'TEACHER', 'STUDENT')
   async findOneByUserId(@Param('id') id: string) {
     const student = await this.studentService.getStudentByUserId(id);
     if (!student) {
