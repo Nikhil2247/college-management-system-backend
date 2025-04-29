@@ -7,37 +7,37 @@ export class FeeController {
   constructor(private readonly feeService: FeeService) {}
 
   @Post()
-  @Roles('ACCOUNTANT', 'PRINCIPAL')
+ // @Roles('ADMISSION_OFFICER', 'PRINCIPAL','ACCOUNTANT')
   create(@Body() body: any) {
     return this.feeService.createFee(body);
   }
 
   @Get()
-  @Roles('ACCOUNTANT', 'PRINCIPAL')
+ // @Roles('ADMISSION_OFFICER', 'PRINCIPAL','ACCOUNTANT')
   getAll() {
     return this.feeService.getAllFees();
   }
 
   @Get(':id')
-  @Roles('ADMISSION_OFFICER', 'PRINCIPAL','ACCOUNTANT')
+ // @Roles('ADMISSION_OFFICER', 'PRINCIPAL','ACCOUNTANT')
   getOne(@Param('id') id: string) {
     return this.feeService.getFeeById(id);
   }
 
   @Get('student/:studentId')
-  @Roles('ACCOUNTANT', 'PRINCIPAL')
+  //@Roles('ACCOUNTANT', 'PRINCIPAL')
   getByStudent(@Param('studentId') studentId: string) {
     return this.feeService.getFeesByStudent(studentId);
   }
 
   @Put(':id')
-  @Roles('ACCOUNTANT', 'PRINCIPAL')
+  //@Roles('ACCOUNTANT', 'PRINCIPAL')
   update(@Param('id') id: string, @Body() body: any) {
     return this.feeService.updateFee(id, body);
   }
 
   @Delete(':id')
-  @Roles('ACCOUNTANT', 'PRINCIPAL')
+  //@Roles('ACCOUNTANT', 'PRINCIPAL')
   delete(@Param('id') id: string) {
     return this.feeService.deleteFee(id);
   }
